@@ -10,27 +10,24 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import Carregando from "../Carregando";
 import api from "../../api";
 import formatCurrency from "currency-formatter";
+import useLoad from "../../Data/Load";
 
 const GrupoDeLancamentos = ({ associado, props }) => {
 	const { matricula, dep } = associado;
-	const [quantidade, setQuantidade] = useState(1);
-	const [procedimento, setProcedimento] = useState({
-		Name: "",
-		Valor_convenio: 0,
-	});
+	const [, setload] = useLoad();
 	const [modal, setModal] = useState(false);
 	const [msnModal, setMsnModal] = useState({
 		erro: true,
 		mensagem: "",
 	});
 	const [valor, setValor] = useState(0);
-	const [cupom, setCupom] = useState(false);
+	const [cupom, setCupom] = useState('');
 	const [carregando, setCarregando] = useState(false);
 	const [dataSel, setData] = useState(new Date());
 	const [show, setShow] = useState(false);
-	const [btnvisivel, setBtnvisivel] = useState(false);
+
 	const [convenio] = useConvenio();
-	const { tipo_lancamento, cd_da_area, token } = convenio;
+	const { tipo_lancamento,  token } = convenio;
 
 	const onChange = (event, selectedDate) => {
 		const currentDate = selectedDate || data;
@@ -58,7 +55,7 @@ const GrupoDeLancamentos = ({ associado, props }) => {
 		setMsnModal(data);
 
 		setModal(true);
-
+		setload("ConsultarVendas");
 		setTimeout(() => {
 			setCarregando(false);
 		}, 2000);
@@ -237,7 +234,7 @@ const GrupoDeLancamentos = ({ associado, props }) => {
 					label="Cupom Fiscal"
 					dense
 					mode="outlined"
-					keyboardType="default"
+					keyboardType="numeric"
 					theme={theme}
 					style={[styles.imput]}
 					value={cupom}

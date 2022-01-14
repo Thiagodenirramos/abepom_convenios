@@ -11,17 +11,17 @@ import styles, { primary, sucess, sucessBack } from "../../utils/Style";
 import formatCurrency from "currency-formatter";
 import api from "../../api";
 import Carregando from "../Carregando";
+import useConvenio from "../../Data/Convenio";
 
 export default function LancamentoDetalhado({
 	visualizar,
 	Nr_lancamento,
-	convenio,
 }) {
 	const [carregandoItemVenda, setCarregandoItemVenda] = useState([]);
 	const [mostrar, setMostrar] = visualizar;
 	const [ItensVenda, setItensVenda] = useState([]);
 	const [tipo, setTipo] = useState([]);
-	const { tipo_lancamento, token } = convenio;
+	const [{ tipo_lancamento, token }] = useConvenio();
 
 	useLayoutEffect(() => {
 		if (mostrar) {
@@ -34,11 +34,10 @@ export default function LancamentoDetalhado({
 				headers: { "x-access-token": token },
 			})
 				.then(({ data }) => {
-					console.log(tipo_lancamento, data.itens);
+					
 					if (tipo_lancamento == "3" && data.itens[0].Valor == 0) {
 						data.itens[0].Valor = data.valor * data.parcelas;
 					}
-					console.log(data);
 					setItensVenda(data);
 					setCarregandoItemVenda(false);
 				})
@@ -171,13 +170,11 @@ export default function LancamentoDetalhado({
 										style={{ maxHeight: 400 }}
 										keyExtractor={({ index }) => index}
 										renderItem={({ item, index }) => {
-											// console.log(item);
-											// console.log(ItensVenda);
 											return (
 												<View key={index}>
 													<View key={index} style={{ flexDirection: "row" }}>
 														<Text style={{ width: "75%" }}>
-															{item.descricao_procedimento}
+															{tipo_lancamento == 5? ItensVenda.Cupom?`Cupom: ${ItensVenda.Cupom}`:"Produtos Farmacêuticos": item.descricao_procedimento}
 														</Text>
 														<Text>
 															{formatCurrency.format(

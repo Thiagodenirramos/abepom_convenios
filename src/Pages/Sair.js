@@ -15,7 +15,7 @@ const Load = ({ navigation }) => {
 
   const _retrieveData = () => {
     setStore({ carregouDados: false });
-    navigation.navigate("Login");
+    navigation.navigate("inicio");
   };
   return (
     <View
